@@ -1,77 +1,64 @@
 require 'spec_helper'
 
 describe "StaticPages" do
+	subject { page }
+		
+	shared_examples_for "all static pages" do
 
-	# let(:base_title) { "Rails Tutorial Sample App"}
+		it { should have_selector('h1', heading) }
+		it { should have_title(full_title(page_title)) }
+	end
 
 	describe "Home page" do
 		before { visit root_path }
-		subject { page }
+		let(:heading)		{ 'Sample App' }
+		let(:page_title)	{ '' }
 
-		# it "should have the h1 'Sample App'" do
-		# 	expect(page).to have_content('Sample App')
-		# end
-		it { should have_content( 'Sample App' ) }  # equivalent
-
-		# it "should have the base title" do
-		# 	expect(page).to have_title(base_title)
-		# end
-		it { should have_title(full_title('')) }  # equivalent
-
-		# it "should not have a custom page title" do 
-		# 	expect(page).not_to have_title('| Home')
-		# end
-		it { should_not have_title( '| Home' ) }  # equivalent
+		it_should_behave_like "all static pages"
+		it { should_not have_title( '| Home' ) }
 	end
 
 	describe "Help page" do
 		before { visit help_path }
-		subject { page }
+		let(:heading) 		{ 'Help' }
+		let(:page_title)	{ 'Help' }
 		
-		# it "should have the h1 'Help'" do
-		# 	visit help_path
-		# 	expect(page).to have_content('Help')
-		# end
-		it { should have_content('Help') }
-
-		# it "should have the right title" do
-		# 	visit help_path
-		# 	expect(page).to have_title("#{base_title} | Help")
-		# end
-		it { should have_title(full_title('Help')) }
+		it_should_behave_like "all static pages"
 	end
 
 	describe "About page" do
 		before { visit about_path }
-		subject { page }
+		let(:heading)		{ 'About Us' }
+		let(:page_title)	{ 'About' }
 
-		# it "should have the h1 'About Us'" do
-		# 	visit about_path
-		# 	expect(page).to have_content('About Us')
-		# end
-		it { should have_content('About Us') }
-
-		# it "should have the right title" do
-		# 	visit about_path
-		# 	expect(page).to have_title("#{base_title} | About")
-		# end
-		it { should have_title(full_title('About')) }
+		it_should_behave_like "all static pages"
 	end
 
 	describe "Contact page" do
 		before { visit contact_path }
-		subject { page }
-		# it "should have the content 'Contact'" do
-		# 	visit contact_path
-		# 	expect(page).to have_content('Contact')
-		# end
-		it { should have_content('Contact') }
+		let(:heading)		{ 'Contact' }
+		let(:page_title)	{ 'Contact' }
 
-		# it "should have the right title" do
-		# 	visit contact_path
-		# 	expect(page).to have_title("#{base_title} | Contact")
-		# end
-		it { should have_title(full_title('Contact')) }
+		it_should_behave_like "all static pages"
+	end
+
+	# test links
+	it "should have the right links on the layout" do
+		visit root_path
+		click_link 'About'
+		expect(page).to have_title(full_title('About'))
+
+		click_link 'Help'
+		expect(page).to have_title(full_title('Help'))
+
+		click_link 'Contact'
+		expect(page).to have_title(full_title('Contact'))
+
+		click_link 'Home'
+		expect(page).to have_title(full_title(''))
+
+		click_link 'Sign Up Now'
+		expect(page).to have_title(full_title('Sign Up'))
 	end
 end
 
