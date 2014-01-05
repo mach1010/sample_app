@@ -98,4 +98,16 @@ describe User do
 		before { @user.password = @user.password_confirmation = "a"*5 }
 		it { should be_invalid }
 	end
+# validate email downcase before save
+	describe "with a mixed-case email" do
+ 		let(:mixed_case_email) { "TEST@email.COM" }
+
+ 		it "should be saved as downcase" do
+ 			@user.email = mixed_case_email
+ 			@user.save
+
+ 			expect(@user.reload.email).to eq @user.email.downcase
+ 		end
+	end
+
 end
