@@ -23,6 +23,7 @@ describe User do
 	it { should respond_to(:password_digest) } 
 	it { should respond_to(:password) }
 	it { should respond_to(:password_confirmation) }
+	it { should respond_to(:remember_token) }
 	it { should respond_to(:authenticate) }
 
 	it { should be_valid }
@@ -54,6 +55,7 @@ describe User do
 			end
 		end
 	end
+
 # validate email uniqueness
 	describe "when email is already taken" do
 		before do
@@ -64,6 +66,7 @@ describe User do
 
 		it { should_not be_valid }
 	end
+
 # validate password presence
 	describe "when password is not present" do
 		before do
@@ -72,11 +75,13 @@ describe User do
 		end
 		it { should_not be_valid }
 	end
+
 # validate password and password_confirmation match
 	describe "when password doesn't match confirmation" do
 		before { @user.password_confirmation = "mismatch" }
 		it { should_not be_valid }
 	end
+
 # verify password match and mismatch
 	describe "return value of authenticate method" do
 		before { @user.save }
@@ -93,11 +98,13 @@ describe User do
 			specify { expect(user_for_invalid_password).to be_false }
 		end
 	end
+
 # validate password length
 	describe "with a password that's too short" do
 		before { @user.password = @user.password_confirmation = "a"*5 }
 		it { should be_invalid }
 	end
+
 # validate email downcase before save
 	describe "with a mixed-case email" do
  		let(:mixed_case_email) { "TEST@email.COM" }
@@ -110,4 +117,9 @@ describe User do
  		end
 	end
 
+# verify remember token is created at creation of new user
+	describe "remember token" do
+		before { @user.save }
+		its(:remember_token) { should_not be_blank }
+	end
 end
